@@ -19,8 +19,8 @@ class ProductController extends Controller
     // tampilkan semua produk
     public function index()
     {
-        $products = Product::with(['category','supplier'])->get();
-        return view('products.index', compact('products'));
+        $products = Product::with(['category','supplier'])->paginate(10); 
+        return view('products.index', compact('products' ));
     }
 
     // form tambah produk

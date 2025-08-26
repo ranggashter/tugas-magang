@@ -45,4 +45,29 @@ class BarangKeluarController extends Controller
 
         return redirect()->route('staff.barang-keluar.index')->with('success', 'Barang keluar berhasil ditambahkan.');
     }
+
+  public function processOutgoingConfirm(Request $request, $id)
+{
+    $task = StockTransaction::findOrFail($id);
+
+    $request->validate([
+        'note' => 'nullable|string|max:500',
+        'status' => 'required|in:approved,rejected',
+    ]);
+
+    $task->checked_by = auth()->id();
+    $task->note = $request->note;
+    $task->status = $request->status; // ⬅️ tambahkan ini
+    $task->save();
+
+    if ($request->status === 'approved') {
+        $task->product->decrement('stock', $task->quantity);
+    }
+
+    return redirect()->route('staff.dashboard')->with('success', 'Barang keluar berhasil dikonfirmasi.');
+}
+
+
+
+
 }

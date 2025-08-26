@@ -6,7 +6,7 @@
 <p>Produk: <strong>{{ $task->product->name }}</strong></p>
 <p>Jumlah: <strong>{{ $task->quantity }}</strong></p>
 
-<form action="{{ route('staff.incoming.confirm.process', $task->id) }}" method="POST">
+{{-- <form action="{{ route('staff.incoming.confirm.process', $task->id) }}" method="POST">
     @csrf
 
     <label>
@@ -25,5 +25,21 @@
     <br><br>
 
     <button type="submit">Simpan Konfirmasi</button>
+</form> --}}
+
+<form action="{{ route('staff.incoming.confirm.process', $task->id) }}" method="POST">
+    @csrf
+    <input type="hidden" name="status" value="approved">
+    <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded">
+        Sesuai
+    </button>
+</form>
+
+<form action="{{ route('staff.incoming.confirm.process', $task->id) }}" method="POST" class="mt-2">
+    @csrf
+    <input type="hidden" name="status" value="rejected">
+    <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">
+        Tidak Sesuai
+    </button>
 </form>
 @endsection

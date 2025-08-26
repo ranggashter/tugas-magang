@@ -11,7 +11,7 @@ class BarangMasukController extends Controller
 {
     public function index()
     {
-        $barangMasuk = BarangMasuk::with('product','user')->latest()->get();
+        $barangMasuk = BarangMasuk::with(['product','user'])->latest()->get();
         return view('staff.barang-masuk.index', compact('barangMasuk'));
     }
 
@@ -25,20 +25,40 @@ class BarangMasukController extends Controller
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|integer|min:1',
+            'quantity'   => 'required|integer|min:1',
         ]);
 
-        $barang = BarangMasuk::create([
+        BarangMasuk::create([
             'product_id' => $request->product_id,
-            'quantity' => $request->quantity,
-            'user_id' => auth()->id(),
+            'quantity'   => $request->quantity,
+            'user_id'    => auth()->id(),
+            'status'     => 'pending',
         ]);
 
-        // update stock
-        $product = Product::find($request->product_id);
-        $product->stock += $request->quantity;
-        $product->save();
-
-        return redirect()->route('staff.barang-masuk.index')->with('success', 'Barang masuk berhasil ditambahkan.');
+        return redirect()->route('staff.barang-masuk.index')
+            ->with('success', 'Barang masuk berhasil ditambahkan, menunggu konfirmasi.');
     }
+
+// Konfirmasi Barang Masuk
+public function processIncomingConfirm(Request $request, $id)
+{
+    $task = StockTransaction::findOrFail($id);
+
+    $request->validate([
+        'note' => 'nullable|string|max:500',
+        'status' => 'required|in:approved,rejected',
+    ]);
+
+    $task->checked_by = auth()->id();
+    $task->note = $request->note;
+    $task->status = $request->status; // ⬅️ tambahkan ini
+    $task->save();
+
+    if ($request->status === 'approved') {
+        $task->product->increment('stock', $task->quantity);
+    }
+
+    return redirect()->route('staff.dashboard')->with('success', 'Barang masuk berhasil dikonfirmasi.');
+}
+
 }

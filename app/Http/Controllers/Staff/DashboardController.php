@@ -24,13 +24,16 @@ class DashboardController extends Controller
             ->whereDate('created_at', $today)
             ->whereNull('checked_by')
             ->get();
+$approvedCount = StockTransaction::where('status', 'approved')->count();
+$rejectedCount = StockTransaction::where('status', 'rejected')->count();
 
-        $summary = [
-            'incoming_count' => $incomingTasks->count(),
-            'outgoing_count' => $outgoingTasks->count(),
-            'low_stock' => Product::where('stock', '<=', 5)->count()
-        ];
-
+$summary = [
+    'incoming_count' => $incomingTasks->count(),
+    'outgoing_count' => $outgoingTasks->count(),
+    'low_stock' => Product::where('stock', '<=', 5)->count(),
+    'approved_count' => $approvedCount,
+    'rejected_count' => $rejectedCount,
+];
         return view('dashboard.staff', compact('incomingTasks', 'outgoingTasks', 'summary'));
     }
 

@@ -24,7 +24,7 @@ use App\Http\Controllers\StockController;
 
 // Homepage
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 // Auth routes

@@ -1,176 +1,123 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Produk - Stockify</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            min-height: 100vh;
-        }
-        .form-container {
-            background: white;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            border: 1px solid #e2e8f0;
-        }
-        .form-input {
-            transition: all 0.3s ease;
-            border: 1px solid #e2e8f0;
-            border-radius: 0.5rem;
-        }
-        .form-input:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
-        .form-input:hover {
-            border-color: #cbd5e1;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
-        }
-        .btn-secondary {
-            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
-            transition: all 0.3s ease;
-        }
-        .btn-secondary:hover {
-            background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
-            transform: translateY(-2px);
-        }
-        .alert-error {
-            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
-            border-left: 4px solid #ef4444;
-        }
-    </style>
-</head>
-<body class="text-gray-800">
-    <div class="min-h-screen flex items-center justify-center py-8 px-4">
-        <div class="w-full max-w-2xl">
-            <!-- Header -->
-            <div class="mb-6 text-center">
-                <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Tambah Produk Baru</h1>
-                <p class="text-gray-600">Tambahkan produk baru ke dalam inventori</p>
-            </div>
+@extends('layouts.app')
 
-            <!-- Form Container -->
-            <div class="form-container p-6 md:p-8">
-                <form action="{{ route('products.store') }}" method="POST">
-                    @csrf
+@section('title', 'Tambah Produk')
 
-                    <!-- Nama Produk -->
-                    <div class="mb-6">
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-                            <i class="fas fa-tag text-green-500 mr-1"></i>Nama Produk
-                        </label>
-                        <input type="text" name="name" id="name"
-                            class="form-input px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-green-500"
-                            value="{{ old('name') }}" 
-                            placeholder="Masukkan nama produk" required>
-                        @error('name')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Kategori dan Supplier Row -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <!-- Kategori -->
-                        <div>
-                            <label for="category_id" class="block text-sm font-medium text-gray-700 mb-2">
-                                <i class="fas fa-layer-group text-green-500 mr-1"></i>Kategori
-                            </label>
-                            <select name="category_id" id="category_id" 
-                                class="form-input px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-green-500" required>
-                                <option value="">-- Pilih Kategori --</option>
-                                @foreach($categories as $c)
-                                    <option value="{{ $c->id }}" {{ old('category_id') == $c->id ? 'selected' : '' }}>
-                                        {{ $c->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('category_id')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Supplier -->
-                        <div>
-                            <label for="supplier_id" class="block text-sm font-medium text-gray-700 mb-2">
-                                <i class="fas fa-truck-loading text-green-500 mr-1"></i>Supplier
-                            </label>
-                            <select name="supplier_id" id="supplier_id" 
-                                class="form-input px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-green-500">
-                                <option value="">-- Pilih Supplier --</option>
-                                @foreach($suppliers as $supplier)
-                                    <option value="{{ $supplier->id }}" {{ old('supplier_id') == $supplier->id ? 'selected' : '' }}>
-                                        {{ $supplier->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('supplier_id')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <!-- Stok dan Harga Row -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <!-- Stok -->
-                        <div>
-                            <label for="stock" class="block text-sm font-medium text-gray-700 mb-2">
-                                <i class="fas fa-boxes text-green-500 mr-1"></i>Stok
-                            </label>
-                            <input type="number" name="stock" id="stock"
-                                class="form-input px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-green-500"
-                                value="{{ old('stock', 0) }}" 
-                                min="0" placeholder="Jumlah stok" required>
-                            @error('stock')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Harga -->
-                        <div>
-                            <label for="price" class="block text-sm font-medium text-gray-700 mb-2">
-                                <i class="fas fa-tag text-green-500 mr-1"></i>Harga (Rp)
-                            </label>
-                            <input type="number" name="price" id="price"
-                                class="form-input px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-green-500"
-                                value="{{ old('price', 0) }}" 
-                                min="0" step="0.01" placeholder="Harga produk" required>
-                            @error('price')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <!-- Tombol -->
-                    <div class="flex flex-col sm:flex-row gap-3 mt-8">
-                        <button type="submit" class="btn-primary text-white px-6 py-3 rounded-lg font-medium flex items-center justify-center sm:flex-1">
-                            <i class="fas fa-plus-circle mr-2"></i>Tambah Produk
-                        </button>
-                        <a href="{{ route('products.index') }}" class="btn-secondary text-white px-6 py-3 rounded-lg font-medium flex items-center justify-center sm:flex-1">
-                            <i class="fas fa-times mr-2"></i>Batal
-                        </a>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Info -->
-            <div class="mt-6 text-center text-sm text-gray-500">
-                <p><i class="fas fa-info-circle mr-1"></i>Pastikan semua data terisi dengan benar sebelum menambahkan produk</p>
-            </div>
-        </div>
+@section('content')
+<div class="p-6">
+    <!-- Header with Enhanced Animation -->
+    <div class="mb-8 fade-in">
+        <h1 class="text-3xl font-extrabold tracking-tight" style="color:var(--text-color)">
+            <i class="fas fa-box-open mr-2" style="color:var(--primary-color)"></i> Tambah Produk Baru
+        </h1>
+        <p class="text-base opacity-80 mt-2" style="color:var(--text-muted)">
+            Isi detail produk untuk menambahkannya ke inventori gudang Anda.
+        </p>
     </div>
-</body>
-</html>
+
+    <!-- Form Card -->
+    <div class="modern-card p-8 rounded-2xl fade-in" style="background:var(--card-bg); animation-delay: 0.2s;">
+        <form action="{{ route('products.store') }}" method="POST">
+            @csrf
+
+            <!-- Nama Produk -->
+            <div class="mb-6">
+                <label for="name" class="block text-sm font-medium mb-3" style="color:var(--text-color)">
+                    <i class="fas fa-tag mr-2" style="color:var(--primary-color)"></i>Nama Produk
+                </label>
+                <input type="text" name="name" id="name"
+                    class="form-input px-4 py-3.5 w-full rounded-xl border-2 focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all"
+                    style="background:var(--panel-color); border-color:var(--border-color); color:var(--text-color); focus:ring-color:var(--primary-color)"
+                    value="{{ old('name') }}" 
+                    placeholder="Masukkan nama produk" required>
+                @error('name')
+                    <p class="mt-2 text-sm" style="color:var(--danger-color)">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Kategori & Supplier -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label for="category_id" class="block text-sm font-medium mb-3" style="color:var(--text-color)">
+                        <i class="fas fa-layer-group mr-2" style="color:var(--primary-color)"></i>Kategori
+                    </label>
+                    <select name="category_id" id="category_id"
+                        class="form-input px-4 py-3.5 w-full rounded-xl border-2 focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all"
+                        style="background:var(--panel-color); border-color:var(--border-color); color:var(--text-color); focus:ring-color:var(--primary-color)" required>
+                        <option value="">-- Pilih Kategori --</option>
+                        @foreach($categories as $c)
+                            <option value="{{ $c->id }}" {{ old('category_id') == $c->id ? 'selected' : '' }}>
+                                {{ $c->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('category_id')
+                        <p class="mt-2 text-sm" style="color:var(--danger-color)">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="supplier_id" class="block text-sm font-medium mb-3" style="color:var(--text-color)">
+                        <i class="fas fa-truck mr-2" style="color:var(--primary-color)"></i>Supplier
+                    </label>
+                    <select name="supplier_id" id="supplier_id"
+                        class="form-input px-4 py-3.5 w-full rounded-xl border-2 focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all"
+                        style="background:var(--panel-color); border-color:var(--border-color); color:var(--text-color); focus:ring-color:var(--primary-color)">
+                        <option value="">-- Pilih Supplier --</option>
+                        @foreach($suppliers as $supplier)
+                            <option value="{{ $supplier->id }}" {{ old('supplier_id') == $supplier->id ? 'selected' : '' }}>
+                                {{ $supplier->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('supplier_id')
+                        <p class="mt-2 text-sm" style="color:var(--danger-color)">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            <!-- Stok & Harga -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label for="stock" class="block text-sm font-medium mb-3" style="color:var(--text-color)">
+                        <i class="fas fa-boxes-stacked mr-2" style="color:var(--primary-color)"></i>Stok
+                    </label>
+                    <input type="number" name="stock" id="stock"
+                        class="form-input px-4 py-3.5 w-full rounded-xl border-2 focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all"
+                        style="background:var(--panel-color); border-color:var(--border-color); color:var(--text-color); focus:ring-color:var(--primary-color)"
+                        value="{{ old('stock', 0) }}" min="0" placeholder="Jumlah stok" required>
+                    @error('stock')
+                        <p class="mt-2 text-sm" style="color:var(--danger-color)">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="price" class="block text-sm font-medium mb-3" style="color:var(--text-color)">
+                        <i class="fas fa-money-bill-wave mr-2" style="color:var(--primary-color)"></i>Harga (Rp)
+                    </label>
+                    <input type="number" name="price" id="price"
+                        class="form-input px-4 py-3.5 w-full rounded-xl border-2 focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all"
+                        style="background:var(--panel-color); border-color:var(--border-color); color:var(--text-color); focus:ring-color:var(--primary-color)"
+                        value="{{ old('price', 0) }}" min="0" step="0.01" placeholder="Harga produk" required>
+                    @error('price')
+                        <p class="mt-2 text-sm" style="color:var(--danger-color)">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            <!-- Tombol -->
+            <div class="flex flex-col sm:flex-row gap-4 mt-10">
+                <button type="submit"
+                    class="px-6 py-3.5 rounded-xl font-medium flex items-center justify-center sm:flex-1 hover-lift transition-all"
+                    style="background:var(--primary-color); color:white;">
+                    <i class="fas fa-plus-circle mr-2"></i> Tambah Produk
+                </button>
+                <a href="{{ route('products.index') }}"
+                    class="px-6 py-3.5 rounded-xl font-medium flex items-center justify-center sm:flex-1 hover-lift transition-all text-center"
+                    style="background:var(--panel-color); color:var(--text-color); border: 1px solid var(--border-color)">
+                    <i class="fas fa-times mr-2"></i> Batal
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection

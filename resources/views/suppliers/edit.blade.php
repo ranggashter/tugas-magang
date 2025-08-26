@@ -1,123 +1,70 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Supplier</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            min-height: 100vh;
-        }
-        .page-title {
-            font-size: 1.875rem;
-            font-weight: 700;
-            color: #1e293b;
-        }
-        .form-container {
-            background: white;
-            border-radius: 0.75rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            padding: 2rem;
-        }
-        .form-label {
-            font-size: 1.125rem;
-            font-weight: 500;
-            color: #374151;
-            margin-bottom: 0.5rem;
-        }
-        .form-input {
-            font-size: 1.1rem;
-            padding: 0.75rem 1rem;
-            border-radius: 0.5rem;
-            border: 1px solid #d1d5db;
-            width: 100%;
-            transition: border-color 0.2s;
-        }
-        .form-input:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
-        .btn {
-            font-size: 1.1rem;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-        }
-        .error-container {
-            font-size: 1.1rem;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-        .error-list li {
-            margin-bottom: 0.25rem;
-            font-size: 1.05rem;
-        }
-    </style>
-</head>
-<body class="p-6">
-    <div class="max-w-2xl mx-auto">
-        <h1 class="page-title mb-8">
-            <i class="fas fa-edit mr-3 text-blue-600"></i>Edit Supplier
-        </h1>
+@extends('layouts.app')
 
-        @if ($errors->any())
-            <div class="error-container bg-red-100 text-red-800 border-l-4 border-red-500 mb-6">
-                <strong class="font-bold text-lg"><i class="fas fa-exclamation-circle mr-2"></i>Terjadi Kesalahan:</strong>
-                <ul class="error-list mt-2">
-                    @foreach ($errors->all() as $error)
-                        <li><i class="fas fa-arrow-right mr-2 text-red-600"></i>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+@section('title', 'Edit Supplier')
 
-        <div class="form-container">
-            <form action="{{ route('suppliers.update', $supplier->id) }}" method="POST">
-                @csrf
-                @method('PUT')
-                
-                <div class="mb-6">
-                    <label class="form-label">Nama Supplier</label>
-                    <input type="text" name="name" class="form-input" value="{{ old('name', $supplier->name) }}" required placeholder="Masukkan nama supplier">
-                </div>
+@section('content')
+<div class="max-w-2xl mx-auto py-10 px-4">
+    <!-- Header -->
+    <h1 class="text-3xl font-bold text-gray-800 mb-8 flex items-center">
+        <i class="fas fa-edit text-blue-600 mr-3"></i>Edit Supplier
+    </h1>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div>
-                        <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-input" value="{{ old('email', $supplier->email) }}" placeholder="email@contoh.com">
-                    </div>
-
-                    <div>
-                        <label class="form-label">Telepon</label>
-                        <input type="text" name="phone" class="form-input" value="{{ old('phone', $supplier->phone) }}" placeholder="08123456789">
-                    </div>
-                </div>
-
-                <div class="mb-6">
-                    <label class="form-label">Alamat</label>
-                    <textarea name="address" class="form-input" rows="3" placeholder="Masukkan alamat lengkap">{{ old('address', $supplier->address) }}</textarea>
-                </div>
-
-                <div class="flex space-x-4">
-                    <button type="submit" class="btn bg-blue-600 text-white hover:bg-blue-700">
-                        <i class="fas fa-save mr-2"></i>Update
-                    </button>
-                    <a href="{{ route('suppliers.index') }}" class="btn bg-gray-500 text-white hover:bg-gray-600">
-                        <i class="fas fa-times mr-2"></i>Batal
-                    </a>
-                </div>
-            </form>
+    <!-- Error Alert -->
+    @if ($errors->any())
+    <div class="mb-6 bg-red-100 text-red-800 border-l-4 border-red-500 px-4 py-3 rounded-lg flex items-start">
+        <i class="fas fa-exclamation-circle mr-2 mt-1"></i>
+        <div>
+            <strong class="font-bold">Terjadi Kesalahan:</strong>
+            <ul class="mt-1 list-disc list-inside">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
     </div>
-</body>
-</html>
+    @endif
+
+    <!-- Form Card -->
+    <div class="bg-white shadow-lg rounded-2xl border border-gray-100 p-8">
+        <form action="{{ route('suppliers.update', $supplier->id) }}" method="POST">
+            @csrf
+            @method('PUT')
+
+            <div class="mb-6">
+                <label class="block text-gray-700 font-medium mb-2">Nama Supplier</label>
+                <input type="text" name="name" class="form-input w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                       value="{{ old('name', $supplier->name) }}" required placeholder="Masukkan nama supplier">
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label class="block text-gray-700 font-medium mb-2">Email</label>
+                    <input type="email" name="email" class="form-input w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                           value="{{ old('email', $supplier->email) }}" placeholder="email@contoh.com">
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 font-medium mb-2">Telepon</label>
+                    <input type="text" name="phone" class="form-input w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                           value="{{ old('phone', $supplier->phone) }}" placeholder="08123456789">
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-gray-700 font-medium mb-2">Alamat</label>
+                <textarea name="address" rows="3" class="form-input w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                          placeholder="Masukkan alamat lengkap">{{ old('address', $supplier->address) }}</textarea>
+            </div>
+
+            <div class="flex space-x-4">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg flex items-center">
+                    <i class="fas fa-save mr-2"></i>Update
+                </button>
+                <a href="{{ route('suppliers.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg flex items-center">
+                    <i class="fas fa-times mr-2"></i>Batal
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection

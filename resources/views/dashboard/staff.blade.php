@@ -51,7 +51,7 @@
                 <i class="fas fa-arrow-down text-blue-400 text-xl"></i>
             </div>
             <div>
-                <p class="{{ $theme['subtitle'] }} text-sm">Barang Masuk Hari Ini</p>
+                <p class="{{ $theme['subtitle'] }} text-sm"> tugas check Barang Masuk Hari Ini</p>
                 <p class="text-2xl font-bold">{{ $summary['incoming_count'] ?? '0' }}</p>
             </div>
         </div>
@@ -63,7 +63,7 @@
                 <i class="fas fa-arrow-up text-green-400 text-xl"></i>
             </div>
             <div>
-                <p class="{{ $theme['subtitle'] }} text-sm">Barang Keluar Hari Ini</p>
+                <p class="{{ $theme['subtitle'] }} text-sm">tugas check Barang Keluar Hari Ini</p>
                 <p class="text-2xl font-bold">{{ $summary['outgoing_count'] ?? '0' }}</p>
             </div>
         </div>
@@ -80,6 +80,32 @@
             </div>
         </div>
     </div>
+{{-- 
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
+    <div class="stat-card rounded-xl p-5 {{ $theme['card'] }}">
+        <div class="flex items-center">
+            <div class="p-3 bg-green-500/20 rounded-xl mr-4 shadow-inner">
+                <i class="fas fa-check text-green-400 text-xl"></i>
+            </div>
+            <div>
+                <p class="{{ $theme['subtitle'] }} text-sm">Barang Disetujui</p>
+                <p class="text-2xl font-bold text-green-500">{{ $summary['approved_count'] ?? '0' }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="stat-card rounded-xl p-5 {{ $theme['card'] }}">
+        <div class="flex items-center">
+            <div class="p-3 bg-red-500/20 rounded-xl mr-4 shadow-inner">
+                <i class="fas fa-times text-red-400 text-xl"></i>
+            </div>
+            <div>
+                <p class="{{ $theme['subtitle'] }} text-sm">Barang Ditolak</p>
+                <p class="text-2xl font-bold text-red-500">{{ $summary['rejected_count'] ?? '0' }}</p>
+            </div>
+        </div>
+    </div>
+</div> --}}
 </div>
 
 <!-- Stock Opname Button -->
@@ -161,7 +187,7 @@
 </div>
 
 <!-- Quick Actions -->
-<div class="rounded-xl p-6 {{ $theme['card'] }}">
+{{-- <div class="rounded-xl p-6 {{ $theme['card'] }}">
     <h2 class="text-lg font-semibold mb-6 flex items-center {{ $theme['heading'] }}">
         <i class="fas fa-bolt text-yellow-500 mr-2"></i>
         Aksi Cepat
@@ -180,5 +206,5 @@
             <p class="text-sm font-medium {{ $theme['heading'] }}">Riwayat</p>
         </a>
     </div>
-</div>
+</div> --}}
 @endsection
