@@ -146,6 +146,7 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
 
     // Stock Manager
     Route::resource('stock', ManagerStockController::class)->only(['index','create','store']);
+    
 
     // Stock Opname Manager (full routes)
     Route::resource('stock-opname', ManagerStockOpnameController::class)->only([

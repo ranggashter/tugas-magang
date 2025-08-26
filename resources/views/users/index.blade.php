@@ -132,7 +132,7 @@
                             <td>
                                 <div class="d-flex align-items-center">
                                     <div class="user-avatar">
-                                        {{ substr($user->name, 0, 1) }}
+                                        
                                     </div>
                                     <div class="fw-semibold">{{ $user->name }}</div>
                                 </div>

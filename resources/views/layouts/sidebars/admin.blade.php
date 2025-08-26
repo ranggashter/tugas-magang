@@ -49,7 +49,7 @@
     <!-- 🏠 Header Logo + Title with Modern Gradient -->
     <div class="flex items-center space-x-4 p-6 border-b {{ $theme['header'] }} animate__animated animate__fadeInDown">
         <!-- 🎯 Modern Logo Container with Hover Effects -->
-        <div class="logo-container relative w-16 h-16 flex items-center justify-center rounded-2xl shadow-lg overflow-hidden bg-white hover:shadow-xl transition-all duration-300 hover:scale-105">
+        <div class="logo-container relative w-16 h-16 flex items-center justify-center rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-105">
             @if(setting('logo'))
                 <img src="{{ app_logo() }}" alt="Logo" class="w-full h-full object-contain transition-transform duration-300 hover:scale-110">
             @else

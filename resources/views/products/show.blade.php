@@ -1,154 +1,175 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Produk - Stockify</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            min-height: 100vh;
-        }
-        .detail-container {
-            background: white;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            border: 1px solid #e2e8f0;
-        }
-        .info-card {
-            transition: all 0.3s ease;
-            border-left: 4px solid #3b82f6;
-        }
-        .info-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.1);
-        }
-        .table-row:hover {
-            background-color: #f8fafc;
-        }
-        .badge-success {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        }
-        .badge-danger {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-        }
-        .badge-warning {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-        }
-        .btn-back {
-            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
-            transition: all 0.3s ease;
-        }
-        .btn-back:hover {
-            background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
-            transform: translateY(-2px);
-        }
-    </style>
-</head>
-<body class="text-gray-800">
-    <div class="min-h-screen py-8 px-4">
-        <div class="max-w-4xl mx-auto">
-            <!-- Header -->
-            <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                    <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Detail Produk</h1>
-                    <p class="text-gray-600">Informasi lengkap tentang produk</p>
-                </div>
-                <a href="{{ route('products.index') }}" class="btn-back text-white px-4 py-2 rounded-lg font-medium inline-flex items-center mt-4 sm:mt-0">
-                    <i class="fas fa-arrow-left mr-2"></i>Kembali
-                </a>
-            </div>
+@extends('layouts.app')
 
-            <!-- Product Info -->
-            <div class="detail-container p-6 mb-6">
-                <div class="info-card bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg mb-6">
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                        <i class="fas fa-info-circle text-blue-500 mr-2"></i>
-                        Informasi Produk
-                    </h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <p class="text-sm text-gray-500">Nama Produk</p>
-                            <p class="font-medium text-lg">{{ $product->name }}</p>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">Kategori</p>
-                            <p class="font-medium">{{ $product->category->name ?? '-' }}</p>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">Supplier</p>
-                            <p class="font-medium">{{ $product->supplier->name ?? '-' }}</p>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">Harga</p>
-                            <p class="font-medium">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">Stok Tersedia</p>
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-white 
-                                {{ $product->stock > 20 ? 'badge-success' : ($product->stock > 0 ? 'badge-warning' : 'badge-danger') }}">
-                                {{ $product->stock }}
-                                <i class="fas {{ $product->stock > 20 ? 'fa-check-circle' : ($product->stock > 0 ? 'fa-exclamation-triangle' : 'fa-times-circle') }} ml-1"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+@section('title', 'Detail Produk')
 
-            <!-- Transaction History -->
-            <div class="detail-container p-6">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                    <i class="fas fa-history text-blue-500 mr-2"></i>
-                    Riwayat Stok
-                </h2>
-                
-                @if($product->transactions->isEmpty())
-                    <div class="text-center py-8 bg-gray-50 rounded-lg">
-                        <i class="fas fa-inbox text-gray-300 text-4xl mb-3"></i>
-                        <p class="text-gray-500">Belum ada transaksi untuk produk ini</p>
-                    </div>
-                @else
-                    <div class="overflow-x-auto rounded-lg shadow">
-                        <table class="w-full">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Petugas</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                @foreach ($product->transactions as $t)
-                                    <tr class="table-row transition-colors duration-200">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {{ $t->created_at->format('d M Y H:i') }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                                {{ $t->type == 'masuk' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                                <i class="fas {{ $t->type == 'masuk' ? 'fa-arrow-down' : 'fa-arrow-up' }} mr-1"></i>
-                                                {{ ucfirst($t->type) }}
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {{ $t->quantity }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {{ $t->user->name ?? 'System' }}
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                @endif
+@section('content')
+<div class="p-6">
+    <!-- Header with Enhanced Animation -->
+    <div class="flex justify-between items-center mb-8 fade-in">
+        <div>
+            <h1 class="text-3xl font-extrabold tracking-tight" style="color:var(--text-color)">
+                <i class="fas fa-info-circle mr-2" style="color:var(--primary-color)"></i> Detail Produk
+            </h1>
+            <p class="text-base opacity-80 mt-2" style="color:var(--text-muted)">
+                Informasi lengkap tentang produk dalam inventori.
+            </p>
+        </div>
+        <a href="{{ route('products.index') }}" 
+           class="px-5 py-3 rounded-xl font-medium shadow-md hover-lift transition-all duration-300 flex items-center"
+           style="background:var(--panel-color); color:var(--text-color); border: 1px solid var(--border-color);">
+            <i class="fas fa-arrow-left mr-2"></i> Kembali
+        </a>
+    </div>
+
+    <!-- Product Info -->
+    <div class="modern-card p-6 rounded-2xl mb-6 fade-in" style="background:var(--card-bg); animation-delay: 0.2s;">
+        <h2 class="text-xl font-semibold mb-6 flex items-center" style="color:var(--text-color)">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:var(--primary-color); color:white;">
+                <i class="fas fa-info"></i>
+            </div>
+            Informasi Produk
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="p-4 rounded-xl" style="background:var(--panel-color);">
+                <p class="text-sm mb-2" style="color:var(--text-muted)">Nama Produk</p>
+                <p class="font-medium text-lg" style="color:var(--text-color)">{{ $product->name }}</p>
+            </div>
+            
+            <div class="p-4 rounded-xl" style="background:var(--panel-color);">
+                <p class="text-sm mb-2" style="color:var(--text-muted)">Kategori</p>
+                <p class="font-medium" style="color:var(--text-color)">
+                    <span class="px-3 py-1 rounded-full text-xs" 
+                          style="background:color-mix(in srgb, var(--primary-color) 10%, transparent); color:var(--primary-color);">
+                        {{ $product->category->name ?? '-' }}
+                    </span>
+                </p>
+            </div>
+            
+            <div class="p-4 rounded-xl" style="background:var(--panel-color);">
+                <p class="text-sm mb-2" style="color:var(--text-muted)">Supplier</p>
+                <p class="font-medium" style="color:var(--text-color)">{{ $product->supplier->name ?? '-' }}</p>
+            </div>
+            
+            <div class="p-4 rounded-xl" style="background:var(--panel-color);">
+                <p class="text-sm mb-2" style="color:var(--text-muted)">Harga</p>
+                <p class="font-bold" style="color:var(--primary-color)">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
+            </div>
+            
+            <div class="p-4 rounded-xl" style="background:var(--panel-color);">
+                <p class="text-sm mb-2" style="color:var(--text-muted)">Stok Tersedia</p>
+                <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold
+                    {{ $product->stock > 20 ? 'bg-green-600/20 text-green-400' : 
+                       ($product->stock > 0 ? 'bg-yellow-600/20 text-yellow-400' : 'bg-red-600/20 text-red-400') }}">
+                    {{ $product->stock }}
+                    <i class="fas {{ $product->stock > 20 ? 'fa-check-circle' : ($product->stock > 0 ? 'fa-exclamation-triangle' : 'fa-times-circle') }} ml-1"></i>
+                </span>
+            </div>
+            
+            <div class="p-4 rounded-xl" style="background:var(--panel-color);">
+                <p class="text-sm mb-2" style="color:var(--text-muted)">ID Produk</p>
+                <p class="font-mono text-sm" style="color:var(--text-color)">#{{ $product->id }}</p>
             </div>
         </div>
     </div>
-</body>
-</html>
+
+    <!-- Transaction History -->
+    <div class="modern-card p-6 rounded-2xl fade-in" style="background:var(--card-bg); animation-delay: 0.3s;">
+        <h2 class="text-xl font-semibold mb-6 flex items-center" style="color:var(--text-color)">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:var(--primary-color); color:white;">
+                <i class="fas fa-history"></i>
+            </div>
+            Riwayat Stok
+        </h2>
+        
+        @if($product->transactions->isEmpty())
+            <div class="text-center py-8 rounded-xl" style="background:var(--panel-color);">
+                <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                     style="background:color-mix(in srgb, var(--text-muted) 10%, transparent); color:var(--text-muted);">
+                    <i class="fas fa-inbox text-xl"></i>
+                </div>
+                <p class="font-medium" style="color:var(--text-color)">Belum ada transaksi</p>
+                <p class="text-sm mt-1" style="color:var(--text-muted)">Tidak ada riwayat transaksi untuk produk ini</p>
+            </div>
+        @else
+            <div class="overflow-x-auto rounded-xl" style="border: 1px solid var(--border-color);">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr style="background:var(--panel-color);">
+                            <th class="p-4 font-semibold text-left" style="color:var(--text-color)">Tanggal</th>
+                            <th class="p-4 font-semibold text-left" style="color:var(--text-color)">Jenis</th>
+                            <th class="p-4 font-semibold text-left" style="color:var(--text-color)">Jumlah</th>
+                            <th class="p-4 font-semibold text-left" style="color:var(--text-color)">Petugas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($product->transactions as $t)
+                            <tr class="border-t transition-colors hover:bg-gray-800/10" style="border-color:var(--border-color)">
+                                <td class="p-4" style="color:var(--text-color)">
+                                    {{ $t->created_at->format('d M Y H:i') }}
+                                </td>
+                                <td class="p-4">
+                                    <span class="px-3 py-1 rounded-full text-xs font-semibold
+                                        {{ $t->type == 'masuk' ? 'bg-green-600/20 text-green-400' : 'bg-red-600/20 text-red-400' }}">
+                                        <i class="fas {{ $t->type == 'masuk' ? 'fa-arrow-down' : 'fa-arrow-up' }} mr-1"></i>
+                                        {{ ucfirst($t->type) }}
+                                    </span>
+                                </td>
+                                <td class="p-4" style="color:var(--text-color)">
+                                    {{ $t->quantity }}
+                                </td>
+                                <td class="p-4" style="color:var(--text-color)">
+                                    {{ $t->user->name ?? 'System' }}
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Stats Summary -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                <div class="p-4 rounded-xl text-center" style="background:var(--panel-color);">
+                    <p class="text-sm mb-2" style="color:var(--text-muted)">Total Masuk</p>
+                    <p class="text-2xl font-bold" style="color:var(--success-color)">
+                        {{ $product->transactions->where('type', 'masuk')->sum('quantity') }}
+                    </p>
+                </div>
+                
+                <div class="p-4 rounded-xl text-center" style="background:var(--panel-color);">
+                    <p class="text-sm mb-2" style="color:var(--text-muted)">Total Keluar</p>
+                    <p class="text-2xl font-bold" style="color:var(--danger-color)">
+                        {{ $product->transactions->where('type', 'keluar')->sum('quantity') }}
+                    </p>
+                </div>
+                
+                <div class="p-4 rounded-xl text-center" style="background:var(--panel-color);">
+                    <p class="text-sm mb-2" style="color:var(--text-muted)">Jumlah Transaksi</p>
+                    <p class="text-2xl font-bold" style="color:var(--primary-color)">
+                        {{ $product->transactions->count() }}
+                    </p>
+                </div>
+            </div>
+        @endif
+    </div>
+</div>
+@endsection
+
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add animations to table rows
+    const tableRows = document.querySelectorAll('tbody tr');
+    tableRows.forEach((row, index) => {
+        row.style.opacity = '0';
+        row.style.transform = 'translateY(20px)';
+        row.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        
+        setTimeout(() => {
+            row.style.opacity = '1';
+            row.style.transform = 'translateY(0)';
+        }, 100 + (index * 50));
+    });
+});
+</script>
+@endsection
